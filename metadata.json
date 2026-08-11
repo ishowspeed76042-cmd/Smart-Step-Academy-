@@ -1,0 +1,6 @@
+{
+  "name": "Smart Step Academy - Latur",
+  "description": "Official website for Smart Step Academy, Latur. Premium coaching for English, Maths, and Science by Prof. Shravan Sir and Prof. Lakhsham Bhole Sir.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

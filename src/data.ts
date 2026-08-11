@@ -1,0 +1,121 @@
+import { Faculty, ClassSchedule, OfferNotification, GalleryItem, VideoLicense } from "./types";
+
+export const ACADEMY_CONFIG = {
+  name: "Smart Step Academy",
+  tagline: "Empowering Futures with Excellence in Education",
+  location: "Back of Dhanvantari Clinic, Latur, Maharashtra",
+  pincode: "413512",
+  phonePrimary: "+91 98765 43210",
+  phoneSecondary: "+91 91234 56789",
+  email: "ishowspeed76042@gmail.com",
+  logoUrl: "https://i.postimg.cc/pL7xyB7d/IMG-20260811-WA0004.jpg",
+  bannerUrl: "https://i.postimg.cc/3xbrmhkf/IMG-20260811-WA0005.jpg",
+  pamphletUrl: "https://i.postimg.cc/zG9ZqGb8/IMG-20260811-WA0003.jpg",
+};
+
+export const FACULTIES: Faculty[] = [
+  {
+    id: "f1",
+    name: "Prof. Shravan Sir",
+    title: "Senior Academician & Director",
+    subjects: ["English", "Science"],
+    experience: "12+ Years Teaching Experience",
+    bio: "Specialist in conceptual English mastery, scientific reasoning, and exam strategies. Known for high result accuracy and personal attention to every student.",
+    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=500&q=80",
+  },
+  {
+    id: "f2",
+    name: "Prof. Lakhsham Bhole Sir",
+    title: "Senior Mathematics & Science Specialist",
+    subjects: ["Mathematics", "Physics & Chemistry"],
+    experience: "10+ Years Teaching Experience",
+    bio: "Expert in shortcut mathematical problem solving, physics fundamentals, and board toppers training. Passionate about removing math fear in students.",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=500&q=80",
+  },
+];
+
+export const SCHEDULE: ClassSchedule[] = [
+  {
+    time: "4:00 PM - 5:00 PM",
+    subject: "English",
+    faculty: "Prof. Shravan Sir",
+    description: "Grammar refinement, vocabulary development, literature comprehension & writing skills.",
+    iconName: "BookOpen",
+  },
+  {
+    time: "5:00 PM - 6:00 PM",
+    subject: "Mathematics",
+    faculty: "Prof. Lakhsham Bhole Sir",
+    description: "Formula derivation, step-by-step problem solving, algebra, geometry & speed techniques.",
+    iconName: "Calculator",
+  },
+  {
+    time: "6:00 PM - 7:00 PM",
+    subject: "Science",
+    faculty: "Prof. Shravan Sir & Prof. Lakhsham Bhole Sir",
+    description: "Physics, Chemistry, Biology concepts, practical diagrams & experiment analysis.",
+    iconName: "Atom",
+  },
+];
+
+export const INITIAL_OFFERS: OfferNotification[] = [
+  {
+    id: "o1",
+    title: "🚀 Admissions Open for New Batches!",
+    description: "Special Early Bird Discount available for 8th, 9th & 10th Standard Students. Reserve your seat today!",
+    badge: "NEW BATCH",
+    isActive: true,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "o2",
+    title: "🏆 FREE Sunday Mock Test Series",
+    description: "Special weekly assessment test series for Board students with personal analysis by Prof. Shravan Sir & Prof. Lakhsham Bhole Sir.",
+    badge: "FREE MOCK TEST",
+    isActive: true,
+    createdAt: new Date().toISOString(),
+  },
+];
+
+export const INITIAL_GALLERY: GalleryItem[] = [
+  {
+    id: "g1",
+    title: "Smart Step Academy Official Pamphlet",
+    category: "Gallery",
+    imageUrl: "https://i.postimg.cc/zG9ZqGb8/IMG-20260811-WA0003.jpg",
+    uploadedAt: new Date().toISOString(),
+  },
+  {
+    id: "g2",
+    title: "Classroom Interactive Session",
+    category: "Classroom",
+    imageUrl: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80",
+    uploadedAt: new Date().toISOString(),
+  },
+  {
+    id: "g3",
+    title: "Board Exam Toppers Felicitation",
+    category: "Success Story",
+    imageUrl: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80",
+    uploadedAt: new Date().toISOString(),
+  },
+];
+
+export const INITIAL_VIDEOS: VideoLicense[] = [
+  {
+    id: "v1",
+    title: "10th Maths: Quadratic Equations Shortcut Tricks",
+    subject: "Mathematics",
+    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    description: "Master quadratic equations and speed formulas with Prof. Lakhsham Bhole Sir.",
+    addedAt: new Date().toISOString(),
+  },
+  {
+    id: "v2",
+    title: "Science: Chemical Reactions & Equations Overview",
+    subject: "Science",
+    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    description: "Essential science lecture covering balancing chemical equations by Prof. Shravan Sir.",
+    addedAt: new Date().toISOString(),
+  },
+];

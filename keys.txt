@@ -1,0 +1,39 @@
+================================================================================
+               SMART STEP ACADEMY - CONFIGURATION & API KEYS
+================================================================================
+
+[JSONBIN DATABASE CONFIGURATION]
+BIN_ID = 6a7b2227f5f4af5e29073d4e
+MASTER_KEY = $2a$10$AEHZO54XXagoeQhEKxz9YunSQUuxJ1sJwjC/Xu9WhPix8JNLMW0k.
+JSONBIN_URL = https://api.jsonbin.io/v3/b/6a7b2227f5f4af5e29073d4e
+
+[IMGBB IMAGE UPLOAD API]
+API_KEY = 1847305813bde68a183799717331cf97
+UPLOAD_URL = https://api.imgbb.com/1/upload
+
+[TELEGRAM BOT NOTIFICATION SYSTEM]
+BOT_TOKEN = 8712759180:AAEf1kFAwcMGBZLGLOKOJSDF_RuonPNAGo8
+GROUP_CHAT_ID = -1003625274749
+TELEGRAM_API_URL = https://api.telegram.org/bot8712759180:AAEf1kFAwcMGBZLGLOKOJSDF_RuonPNAGo8/sendMessage
+
+[GMAIL SMTP EMAIL OTP & CONFIRMATION SERVICE]
+SMTP_HOST = smtp.gmail.com
+SMTP_PORT = 465
+SMTP_USER = ishowspeed76042@gmail.com
+SMTP_PASS = zxda mwuq qzns uqwl
+
+[ACADEMY BRANDING & ASSETS]
+ACADEMY_NAME = Smart Step Academy
+LOGO_URL = https://i.postimg.cc/pL7xyB7d/IMG-20260811-WA0004.jpg
+BACKGROUND_BANNER_URL = https://i.postimg.cc/3xbrmhkf/IMG-20260811-WA0005.jpg
+PAMPHLET_BROCHURE_URL = https://i.postimg.cc/zG9ZqGb8/IMG-20260811-WA0003.jpg
+
+[ACADEMY ADDRESS & DETAILS]
+LOCATION = Back of Dhanvantari Clinic, Latur, Maharashtra
+PINCODE = 413512
+FACULTY_1 = Prof. Shravan Sir (English & Science Expert)
+FACULTY_2 = Prof. Lakhsham Bhole Sir (Maths & Science Expert)
+TIMINGS = Evening 4:00 PM to 7:00 PM
+SCHEDULE = 4:00 PM - 5:00 PM: English | 5:00 PM - 6:00 PM: Maths | 6:00 PM - 7:00 PM: Science
+SUBJECTS = English, Science, Mathematics
+================================================================================
