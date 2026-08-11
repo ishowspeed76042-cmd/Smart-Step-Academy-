@@ -55,7 +55,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </h1>
 
           <p className="text-lg sm:text-2xl font-bold text-amber-400 max-w-3xl mx-auto leading-snug">
-            Guided by <span className="text-white underline decoration-blue-500">Prof. Shravan Sir</span> & <span className="text-white underline decoration-blue-500">Prof. Lakhsham Bhole Sir</span>
+            Guided by <span className="text-white underline decoration-blue-500">Prof. Shravan Sir</span> & <span className="text-white underline decoration-blue-500">Prof. Bhole Sir</span>
           </p>
 
           <p className="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">

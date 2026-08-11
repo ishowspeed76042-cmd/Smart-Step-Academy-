@@ -178,7 +178,7 @@ app.get("/api/health", (req, res) => {
     status: "ok",
     academy: "Smart Step Academy, Latur",
     location: "Back of Dhanvantari Clinic, Pin Code: 413512",
-    teachers: ["Prof. Shravan Sir", "Prof. Lakhsham Bhole Sir"],
+    teachers: ["Prof. Shravan Sir", "Prof. Bhole Sir"],
   });
 });
 
@@ -187,15 +187,15 @@ app.get("/api/config", (req, res) => {
   res.json({
     academyName: "Smart Step Academy",
     location: "Back of Dhanvantari Clinic, Latur - 413512",
-    teachers: ["Prof. Shravan Sir", "Prof. Lakhsham Bhole Sir"],
+    teachers: ["Prof. Shravan Sir", "Prof. Bhole Sir"],
     logoUrl: config.logoUrl,
     bannerUrl: config.bannerUrl,
     pamphletUrl: config.pamphletUrl,
     timings: "Evening 4:00 PM to 7:00 PM",
     schedule: [
       { time: "4:00 PM - 5:00 PM", subject: "English", faculty: "Prof. Shravan Sir" },
-      { time: "5:00 PM - 6:00 PM", subject: "Mathematics", faculty: "Prof. Lakhsham Bhole Sir" },
-      { time: "6:00 PM - 7:00 PM", subject: "Science", faculty: "Prof. Shravan Sir & Prof. Lakhsham Bhole Sir" },
+      { time: "5:00 PM - 6:00 PM", subject: "Mathematics", faculty: "Prof. Bhole Sir" },
+      { time: "6:00 PM - 7:00 PM", subject: "Science", faculty: "Prof. Shravan Sir & Prof. Bhole Sir" },
     ],
   });
 });
@@ -236,7 +236,7 @@ app.post("/api/send-otp", async (req, res) => {
             <p style="font-size: 14px; color: #64748b;">This OTP is valid for 10 minutes. Please do not share this code with anyone.</p>
           </div>
           <div style="text-align: center; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #94a3b8;">
-            <p>Prof. Shravan Sir & Prof. Lakhsham Bhole Sir | Smart Step Academy, Latur</p>
+            <p>Prof. Shravan Sir & Prof. Bhole Sir | Smart Step Academy, Latur</p>
           </div>
         </div>
       `,
@@ -385,7 +385,7 @@ app.post("/api/verify-otp", async (req, res) => {
                 <li><strong>English Period:</strong> 4:00 PM - 5:00 PM</li>
                 <li><strong>Maths Period:</strong> 5:00 PM - 6:00 PM</li>
                 <li><strong>Science Period:</strong> 6:00 PM - 7:00 PM</li>
-                <li><strong>Faculties:</strong> Prof. Shravan Sir & Prof. Lakhsham Bhole Sir</li>
+                <li><strong>Faculties:</strong> Prof. Shravan Sir & Prof. Bhole Sir</li>
               </ul>
             </div>
             

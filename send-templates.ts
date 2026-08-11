@@ -52,7 +52,7 @@ async function sendTemplates() {
             <p style="font-size: 14px; color: #64748b;">This OTP is valid for 10 minutes. Please do not share this code with anyone.</p>
           </div>
           <div style="text-align: center; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #94a3b8;">
-            <p>Prof. Shravan Sir & Prof. Lakhsham Bhole Sir | Smart Step Academy, Latur</p>
+            <p>Prof. Shravan Sir & Prof. Bhole Sir | Smart Step Academy, Latur</p>
           </div>
         </div>
       </div>
@@ -82,7 +82,7 @@ async function sendTemplates() {
                 <li><strong>English Period:</strong> 4:00 PM - 5:00 PM</li>
                 <li><strong>Maths Period:</strong> 5:00 PM - 6:00 PM</li>
                 <li><strong>Science Period:</strong> 6:00 PM - 7:00 PM</li>
-                <li><strong>Faculties:</strong> Prof. Shravan Sir & Prof. Lakhsham Bhole Sir</li>
+                <li><strong>Faculties:</strong> Prof. Shravan Sir & Prof. Bhole Sir</li>
               </ul>
             </div>
             

@@ -21,16 +21,16 @@ export const FACULTIES: Faculty[] = [
     subjects: ["English", "Science"],
     experience: "12+ Years Teaching Experience",
     bio: "Specialist in conceptual English mastery, scientific reasoning, and exam strategies. Known for high result accuracy and personal attention to every student.",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=500&q=80",
+    avatar: "",
   },
   {
     id: "f2",
-    name: "Prof. Lakhsham Bhole Sir",
+    name: "Prof. Bhole Sir",
     title: "Senior Mathematics & Science Specialist",
     subjects: ["Mathematics", "Physics & Chemistry"],
     experience: "10+ Years Teaching Experience",
     bio: "Expert in shortcut mathematical problem solving, physics fundamentals, and board toppers training. Passionate about removing math fear in students.",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=500&q=80",
+    avatar: "https://i.ibb.co/rKLf0VHd/IMG-20260811-WA0009.jpg",
   },
 ];
 
@@ -45,14 +45,14 @@ export const SCHEDULE: ClassSchedule[] = [
   {
     time: "5:00 PM - 6:00 PM",
     subject: "Mathematics",
-    faculty: "Prof. Lakhsham Bhole Sir",
+    faculty: "Prof. Bhole Sir",
     description: "Formula derivation, step-by-step problem solving, algebra, geometry & speed techniques.",
     iconName: "Calculator",
   },
   {
     time: "6:00 PM - 7:00 PM",
     subject: "Science",
-    faculty: "Prof. Shravan Sir & Prof. Lakhsham Bhole Sir",
+    faculty: "Prof. Shravan Sir & Prof. Bhole Sir",
     description: "Physics, Chemistry, Biology concepts, practical diagrams & experiment analysis.",
     iconName: "Atom",
   },
@@ -70,7 +70,7 @@ export const INITIAL_OFFERS: OfferNotification[] = [
   {
     id: "o2",
     title: "🏆 FREE Sunday Mock Test Series",
-    description: "Special weekly assessment test series for Board students with personal analysis by Prof. Shravan Sir & Prof. Lakhsham Bhole Sir.",
+    description: "Special weekly assessment test series for Board students with personal analysis by Prof. Shravan Sir & Prof. Bhole Sir.",
     badge: "FREE MOCK TEST",
     isActive: true,
     createdAt: new Date().toISOString(),
@@ -107,7 +107,7 @@ export const INITIAL_VIDEOS: VideoLicense[] = [
     title: "10th Maths: Quadratic Equations Shortcut Tricks",
     subject: "Mathematics",
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    description: "Master quadratic equations and speed formulas with Prof. Lakhsham Bhole Sir.",
+    description: "Master quadratic equations and speed formulas with Prof. Bhole Sir.",
     addedAt: new Date().toISOString(),
   },
   {

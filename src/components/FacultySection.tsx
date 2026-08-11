@@ -1,6 +1,6 @@
 import React from "react";
 import { FACULTIES } from "../data";
-import { Award, BookOpen, Star, Sparkles, MessageCircle, CheckCircle2 } from "lucide-react";
+import { Award, BookOpen, Star, Sparkles, MessageCircle, CheckCircle2, UserCheck } from "lucide-react";
 
 interface FacultySectionProps {
   onOpenEnquiry: () => void;
@@ -36,12 +36,20 @@ export const FacultySection: React.FC<FacultySectionProps> = ({ onOpenEnquiry })
 
               <div>
                 <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 mb-6 text-center sm:text-left">
-                  <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-amber-400 shadow-xl shrink-0">
-                    <img
-                      src={teacher.avatar}
-                      alt={teacher.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                    />
+                  <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-amber-400 shadow-xl shrink-0 bg-slate-900 flex flex-col items-center justify-center text-center p-2">
+                    {teacher.avatar ? (
+                      <img
+                        src={teacher.avatar}
+                        alt={teacher.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center text-slate-400 space-y-1">
+                        <UserCheck className="w-8 h-8 text-amber-400" />
+                        <span className="text-[9px] font-bold text-amber-300 uppercase tracking-tight">Photo Coming Soon</span>
+                      </div>
+                    )}
                   </div>
 
                   <div className="space-y-1">

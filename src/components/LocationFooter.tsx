@@ -51,7 +51,7 @@ export const LocationFooter: React.FC<LocationFooterProps> = ({
               <div className="flex items-center gap-3 bg-slate-950/80 p-3 rounded-xl border border-slate-800">
                 <Award className="w-5 h-5 text-emerald-400 shrink-0" />
                 <div>
-                  <strong className="text-white">Professors:</strong> Prof. Shravan Sir & Prof. Lakhsham Bhole Sir
+                  <strong className="text-white">Professors:</strong> Prof. Shravan Sir & Prof. Bhole Sir
                 </div>
               </div>
             </div>
@@ -101,6 +101,7 @@ export const LocationFooter: React.FC<LocationFooterProps> = ({
               <li><button onClick={() => setActiveTab("home")} className="hover:text-blue-400 transition cursor-pointer">Home</button></li>
               <li><button onClick={() => setActiveTab("schedule")} className="hover:text-blue-400 transition cursor-pointer">Timings & Schedule</button></li>
               <li><button onClick={() => setActiveTab("teachers")} className="hover:text-blue-400 transition cursor-pointer">Professors</button></li>
+              <li><button onClick={() => setActiveTab("faq")} className="hover:text-blue-400 transition cursor-pointer">FAQ & Help Center</button></li>
               <li><button onClick={() => setActiveTab("gallery")} className="hover:text-blue-400 transition cursor-pointer">Gallery & Video Lectures</button></li>
             </ul>
           </div>
@@ -121,7 +122,7 @@ export const LocationFooter: React.FC<LocationFooterProps> = ({
           <div className="space-y-2">
             <h4 className="text-white font-bold uppercase tracking-wider text-[11px]">Faculty & Contacts</h4>
             <p className="text-slate-400">• Prof. Shravan Sir</p>
-            <p className="text-slate-400">• Prof. Lakhsham Bhole Sir</p>
+            <p className="text-slate-400">• Prof. Bhole Sir</p>
             <p className="text-emerald-400 font-semibold pt-1">Phone: {ACADEMY_CONFIG.phonePrimary}</p>
             <p className="text-slate-400">Email: {ACADEMY_CONFIG.email}</p>
           </div>

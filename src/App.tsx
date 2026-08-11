@@ -5,6 +5,7 @@ import { HeroSection } from "./components/HeroSection";
 import { ScheduleSection } from "./components/ScheduleSection";
 import { FacultySection } from "./components/FacultySection";
 import { PamphletSection } from "./components/PamphletSection";
+import { FaqSection } from "./components/FaqSection";
 import { GallerySection } from "./components/GallerySection";
 import { LocationFooter } from "./components/LocationFooter";
 import { QuickEnquiryModal } from "./components/QuickEnquiryModal";
@@ -101,6 +102,12 @@ export default function App() {
             <PamphletSection
               onOpenPamphlet={() => setIsPamphletOpen(true)}
               onOpenAdmission={() => setIsAdmissionOpen(true)}
+            />
+
+            <FaqSection
+              onOpenEnquiry={() => setIsEnquiryOpen(true)}
+              onOpenAdmission={() => setIsAdmissionOpen(true)}
+              onOpenPamphlet={() => setIsPamphletOpen(true)}
             />
 
             <GallerySection gallery={gallery} videos={videos} />
