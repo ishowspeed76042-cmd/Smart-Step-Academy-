@@ -15,11 +15,13 @@ import {
   RefreshCw,
   ExternalLink,
   Eye,
+  EyeOff,
 } from "lucide-react";
 
 export const AdminPanelPage: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passcode, setPasscode] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [authError, setAuthError] = useState("");
 
   const [dbState, setDbState] = useState<AdminDatabaseState>({
@@ -74,11 +76,17 @@ export const AdminPanelPage: React.FC = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (passcode.trim() === "admin123" || passcode.trim() === "smartstep") {
+    const clean = passcode.trim().toLowerCase();
+    if (
+      clean === "smart step academy latur" ||
+      clean === "smart step academy, latur" ||
+      clean === "smart step academy illathur" ||
+      clean === "admin123"
+    ) {
       setIsAuthenticated(true);
       setAuthError("");
     } else {
-      setAuthError("Invalid Passcode. Default passcode is: admin123");
+      setAuthError("Admin password is not valid.");
     }
   };
 
@@ -268,13 +276,27 @@ export const AdminPanelPage: React.FC = () => {
               <label className="block text-xs font-semibold text-slate-300 mb-1">
                 Admin Security Passcode
               </label>
-              <input
-                type="password"
-                placeholder="Enter passcode (default: admin123)"
-                value={passcode}
-                onChange={(e) => setPasscode(e.target.value)}
-                className="w-full px-3 py-3 bg-slate-800 border border-slate-700 rounded-xl text-sm focus:border-amber-500 focus:outline-none text-white font-mono"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter admin passcode"
+                  value={passcode}
+                  onChange={(e) => setPasscode(e.target.value)}
+                  className="w-full pl-3 pr-10 py-3 bg-slate-800 border border-slate-700 rounded-xl text-sm focus:border-amber-500 focus:outline-none text-white font-mono"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition focus:outline-none"
+                  title={showPassword ? "Hide Password" : "Show Password"}
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
             </div>
 
             <button

@@ -2,12 +2,17 @@ import React, { useState, useEffect } from "react";
 import { BannerMarquee } from "./components/BannerMarquee";
 import { Navbar } from "./components/Navbar";
 import { HeroSection } from "./components/HeroSection";
+import { TrustStatsBar } from "./components/TrustStatsBar";
+import { BusinessFeaturesSection } from "./components/BusinessFeaturesSection";
 import { ScheduleSection } from "./components/ScheduleSection";
+import { CourseCalculator } from "./components/CourseCalculator";
 import { FacultySection } from "./components/FacultySection";
+import { TestimonialsSection } from "./components/TestimonialsSection";
 import { PamphletSection } from "./components/PamphletSection";
 import { FaqSection } from "./components/FaqSection";
 import { GallerySection } from "./components/GallerySection";
 import { LocationFooter } from "./components/LocationFooter";
+import { FloatingContactBar } from "./components/FloatingContactBar";
 import { QuickEnquiryModal } from "./components/QuickEnquiryModal";
 import { AdmissionModal } from "./components/AdmissionModal";
 import { PamphletModal } from "./components/PamphletModal";
@@ -57,6 +62,26 @@ export default function App() {
     }
   };
 
+  // Secret 5-Tap Gesture to open Admin Portal directly
+  const [tapCount, setTapCount] = useState(0);
+  const [lastTapTime, setLastTapTime] = useState(0);
+
+  const handleSecretTap = () => {
+    const now = Date.now();
+    if (now - lastTapTime < 2000) {
+      const newCount = tapCount + 1;
+      if (newCount >= 5) {
+        setActiveTab("admin");
+        setTapCount(0);
+      } else {
+        setTapCount(newCount);
+      }
+    } else {
+      setTapCount(1);
+    }
+    setLastTapTime(now);
+  };
+
   // Support route checks (if URL path is /support or /admin)
   useEffect(() => {
     const path = window.location.pathname;
@@ -79,6 +104,7 @@ export default function App() {
         onOpenPamphlet={() => setIsPamphletOpen(true)}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
+        onSecretTap={handleSecretTap}
       />
 
       {/* Main Body Routing */}
@@ -93,11 +119,28 @@ export default function App() {
               onOpenEnquiry={() => setIsEnquiryOpen(true)}
               onOpenAdmission={() => setIsAdmissionOpen(true)}
               onOpenPamphlet={() => setIsPamphletOpen(true)}
+              onSecretTap={handleSecretTap}
+            />
+
+            <TrustStatsBar />
+
+            <BusinessFeaturesSection
+              onOpenEnquiry={() => setIsEnquiryOpen(true)}
+              onOpenAdmission={() => setIsAdmissionOpen(true)}
             />
 
             <ScheduleSection onOpenAdmission={() => setIsAdmissionOpen(true)} />
 
-            <FacultySection onOpenEnquiry={() => setIsEnquiryOpen(true)} />
+            <CourseCalculator
+              onOpenAdmission={() => setIsAdmissionOpen(true)}
+            />
+
+            <FacultySection
+              onOpenEnquiry={() => setIsEnquiryOpen(true)}
+              onSecretTap={handleSecretTap}
+            />
+
+            <TestimonialsSection />
 
             <PamphletSection
               onOpenPamphlet={() => setIsPamphletOpen(true)}
@@ -110,10 +153,16 @@ export default function App() {
               onOpenPamphlet={() => setIsPamphletOpen(true)}
             />
 
-            <GallerySection gallery={gallery} videos={videos} />
+            <GallerySection gallery={gallery} />
           </div>
         )}
       </main>
+
+      {/* Floating Action Desk for Quick Contact & Admission */}
+      <FloatingContactBar
+        onOpenEnquiry={() => setIsEnquiryOpen(true)}
+        onOpenAdmission={() => setIsAdmissionOpen(true)}
+      />
 
       {/* Footer & Location */}
       <LocationFooter

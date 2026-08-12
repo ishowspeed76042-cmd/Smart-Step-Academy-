@@ -171,7 +171,7 @@ export const FaqSection: React.FC<FaqSectionProps> = ({
       categoryLabel: "Settings & Admin",
       question: "How does the Director Admin Control Panel work?",
       answer:
-        "The academy director can log into the secure Admin Portal (/admin.html) using a passcode (default: admin123). The admin panel allows managing live database records, publishing promotional marquee offers, uploading gallery photos to ImgBB, and reviewing all student admission submissions.",
+        "The academy director can log into the secure Admin Portal (/admin.html) using the director's secret passcode. The admin panel allows managing live database records, publishing promotional marquee offers, uploading gallery photos to ImgBB, and reviewing all student admission submissions.",
       badge: "Passcode Protected",
       details: [
         "Access via Navigation link or /admin.html route",

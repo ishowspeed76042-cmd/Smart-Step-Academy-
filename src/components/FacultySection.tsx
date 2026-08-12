@@ -4,9 +4,10 @@ import { Award, BookOpen, Star, Sparkles, MessageCircle, CheckCircle2, UserCheck
 
 interface FacultySectionProps {
   onOpenEnquiry: () => void;
+  onSecretTap?: () => void;
 }
 
-export const FacultySection: React.FC<FacultySectionProps> = ({ onOpenEnquiry }) => {
+export const FacultySection: React.FC<FacultySectionProps> = ({ onOpenEnquiry, onSecretTap }) => {
   return (
     <section id="teachers" className="py-16 bg-slate-900 border-t border-slate-800 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -36,7 +37,13 @@ export const FacultySection: React.FC<FacultySectionProps> = ({ onOpenEnquiry })
 
               <div>
                 <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 mb-6 text-center sm:text-left">
-                  <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-amber-400 shadow-xl shrink-0 bg-slate-900 flex flex-col items-center justify-center text-center p-2">
+                  <div
+                    onClick={() => {
+                      if (onSecretTap) onSecretTap();
+                    }}
+                    className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-amber-400 shadow-xl shrink-0 bg-slate-900 flex flex-col items-center justify-center text-center p-2 cursor-pointer hover:scale-105 transition"
+                    title="Tap photo 5 times to open Admin Portal"
+                  >
                     {teacher.avatar ? (
                       <img
                         src={teacher.avatar}

@@ -80,23 +80,16 @@ export const INITIAL_OFFERS: OfferNotification[] = [
 export const INITIAL_GALLERY: GalleryItem[] = [
   {
     id: "g1",
-    title: "Smart Step Academy Official Pamphlet",
+    title: "Smart Step Academy Prospectus & Pamphlet",
     category: "Gallery",
     imageUrl: "https://i.postimg.cc/zG9ZqGb8/IMG-20260811-WA0003.jpg",
     uploadedAt: new Date().toISOString(),
   },
   {
     id: "g2",
-    title: "Classroom Interactive Session",
-    category: "Classroom",
-    imageUrl: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80",
-    uploadedAt: new Date().toISOString(),
-  },
-  {
-    id: "g3",
-    title: "Board Exam Toppers Felicitation",
+    title: "Prof. Bhole Sir - Mathematics & Science Faculty",
     category: "Success Story",
-    imageUrl: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80",
+    imageUrl: "https://i.ibb.co/rKLf0VHd/IMG-20260811-WA0009.jpg",
     uploadedAt: new Date().toISOString(),
   },
 ];

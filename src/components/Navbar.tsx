@@ -20,6 +20,7 @@ interface NavbarProps {
   onOpenPamphlet: () => void;
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  onSecretTap?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -28,6 +29,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenPamphlet,
   activeTab,
   setActiveTab,
+  onSecretTap,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -91,9 +93,13 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
         {/* Brand Logo & Name */}
         <button
-          onClick={() => handleNavClick("home")}
+          onClick={() => {
+            if (onSecretTap) onSecretTap();
+            handleNavClick("home");
+          }}
           className="flex items-center gap-3 text-left group cursor-pointer focus:outline-none"
           id="btn-brand-logo"
+          title="Tap logo 5 times to open Admin Portal"
         >
           <div className="relative w-12 h-12 rounded-xl overflow-hidden border-2 border-blue-500/50 shadow-md group-hover:border-blue-400 transition">
             <img
@@ -108,7 +114,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               Smart Step <span className="text-blue-500">Academy</span>
             </span>
             <p className="text-xs text-blue-300 font-medium tracking-wide">
-              Prof. Shravan Sir & Prof. Lakhsham Bhole Sir
+              Prof. Shravan Sir & Prof. Bhole Sir
             </p>
           </div>
         </button>

@@ -6,12 +6,14 @@ interface HeroSectionProps {
   onOpenEnquiry: () => void;
   onOpenAdmission: () => void;
   onOpenPamphlet: () => void;
+  onSecretTap?: () => void;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
   onOpenEnquiry,
   onOpenAdmission,
   onOpenPamphlet,
+  onSecretTap,
 }) => {
   return (
     <section id="home" className="relative min-h-[85vh] flex items-center justify-center py-16 px-4 sm:px-6 overflow-hidden bg-slate-950">
@@ -40,14 +42,20 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         {/* Main Brand & Headline */}
         <div className="space-y-4">
           <div className="flex justify-center mb-2">
-            <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-4 border-blue-500 shadow-2xl shadow-blue-500/30">
+            <button
+              onClick={() => {
+                if (onSecretTap) onSecretTap();
+              }}
+              className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-4 border-blue-500 shadow-2xl shadow-blue-500/30 cursor-pointer hover:scale-105 transition focus:outline-none"
+              title="Tap logo 5 times to open Admin Portal"
+            >
               <img
                 src={ACADEMY_CONFIG.logoUrl}
                 alt="Smart Step Academy Logo"
                 className="w-full h-full object-cover"
                 referrerPolicy="no-referrer"
               />
-            </div>
+            </button>
           </div>
 
           <h1 className="text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-tight">
