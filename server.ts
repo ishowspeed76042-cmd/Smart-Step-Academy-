@@ -6,8 +6,15 @@ import nodemailer from "nodemailer";
 import { fileURLToPath } from "url";
 import { createServer as createViteServer } from "vite";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const getDirname = () => {
+  if (typeof __dirname !== "undefined") return __dirname;
+  try {
+    return path.dirname(fileURLToPath(import.meta.url));
+  } catch {
+    return process.cwd();
+  }
+};
+const appDir = getDirname();
 
 export const app = express();
 const PORT = 3000;
@@ -15,6 +22,25 @@ const PORT = 3000;
 // High limit for base64 file uploads (Student Photo + Aadhar Card)
 app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ extended: true, limit: "25mb" }));
+
+// Enable CORS and Normalize Netlify Functions URL prefixes
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
+  // Strip Netlify function path prefix if routed directly
+  if (req.url.startsWith("/.netlify/functions/server")) {
+    req.url = req.url.replace(/^\/\.netlify\/functions\/server/, "");
+    if (!req.url.startsWith("/")) {
+      req.url = "/" + req.url;
+    }
+  }
+  next();
+});
 
 // Load configuration from keys.txt or environment variables
 interface AppConfig {
@@ -50,9 +76,9 @@ function loadConfig(): AppConfig {
 
   const possiblePaths = [
     path.join(process.cwd(), "keys.txt"),
-    path.join(__dirname, "keys.txt"),
-    path.join(__dirname, "..", "keys.txt"),
-    path.join(__dirname, "../..", "keys.txt"),
+    path.join(appDir, "keys.txt"),
+    path.join(appDir, "..", "keys.txt"),
+    path.join(appDir, "../..", "keys.txt"),
     path.resolve("keys.txt")
   ];
 
@@ -311,7 +337,11 @@ apiRouter.post("/send-otp", async (req, res) => {
     let sent = false;
     let mailError = "";
     try {
-      await transporter.sendMail(mailOptions);
+      const sendPromise = transporter.sendMail(mailOptions);
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("SMTP connection timed out on serverless platform")), 4000)
+      );
+      await Promise.race([sendPromise, timeoutPromise]);
       sent = true;
     } catch (mailErr: any) {
       console.error("Nodemailer send err:", mailErr);
