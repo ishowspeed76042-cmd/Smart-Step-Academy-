@@ -16,6 +16,8 @@ export const SupportComplaintPage: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [showOtpModal, setShowOtpModal] = useState(false);
+  const [otpToken, setOtpToken] = useState<string | undefined>(undefined);
+  const [initialDebugOtp, setInitialDebugOtp] = useState<string | undefined>(undefined);
   const [submittedResponse, setSubmittedResponse] = useState<any>(null);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -43,6 +45,8 @@ export const SupportComplaintPage: React.FC = () => {
 
       const data = await res.json();
       if (data.success) {
+        setOtpToken(data.otpToken);
+        setInitialDebugOtp(data.debugOtp);
         setShowOtpModal(true);
       } else {
         setErrorMessage(data.message || "Failed to send verification OTP");
@@ -276,6 +280,8 @@ export const SupportComplaintPage: React.FC = () => {
           email={formData.email}
           formType="Support/Complaint"
           formData={formData}
+          otpToken={otpToken}
+          initialDebugOtp={initialDebugOtp}
           onClose={() => setShowOtpModal(false)}
           onSuccess={handleOtpSuccess}
         />

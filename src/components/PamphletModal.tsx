@@ -47,7 +47,7 @@ export const PamphletModal: React.FC<PamphletModalProps> = ({ isOpen, onClose })
         <div className="pt-3 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
           <div className="text-xs text-slate-400 flex items-center gap-1.5">
             <Eye className="w-4 h-4 text-blue-400" />
-            <span>High Resolution Prospectus • Prof. Shravan Sir & Prof. Lakhsham Bhole Sir</span>
+            <span>High Resolution Prospectus • Prof. Shravan Sir & Prof. Sham Bhole Sir</span>
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto">

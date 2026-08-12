@@ -40,7 +40,7 @@ export const PamphletSection: React.FC<PamphletSectionProps> = ({
                 "English: 4:00 PM - 5:00 PM",
                 "Mathematics: 5:00 PM - 6:00 PM",
                 "Science: 6:00 PM - 7:00 PM",
-                "Prof. Shravan Sir & Prof. Lakhsham Bhole Sir",
+                "Prof. Shravan Sir & Prof. Sham Bhole Sir",
                 "Location: Back of Dhanvantari Clinic, Latur",
               ].map((item, idx) => (
                 <div key={idx} className="flex items-center gap-2 bg-slate-900/90 border border-slate-800 p-2.5 rounded-xl">

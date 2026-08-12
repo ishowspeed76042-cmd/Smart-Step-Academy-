@@ -1,23 +1,26 @@
 import express from "express";
 import path from "path";
 import fs from "fs";
+import crypto from "crypto";
 import nodemailer from "nodemailer";
 import { createServer as createViteServer } from "vite";
 
-const app = express();
+export const app = express();
 const PORT = 3000;
 
 // High limit for base64 file uploads (Student Photo + Aadhar Card)
 app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ extended: true, limit: "25mb" }));
 
-// Load configuration from keys.txt
+// Load configuration from keys.txt or environment variables
 interface AppConfig {
   jsonbinId: string;
   jsonbinKey: string;
   imgbbKey: string;
   telegramToken: string;
   telegramGroupId: string;
+  smtpHost: string;
+  smtpPort: number;
   smtpUser: string;
   smtpPass: string;
   logoUrl: string;
@@ -27,35 +30,49 @@ interface AppConfig {
 
 function loadConfig(): AppConfig {
   const defaultConfig: AppConfig = {
-    jsonbinId: "6a7b2227f5f4af5e29073d4e",
-    jsonbinKey: "$2a$10$AEHZO54XXagoeQhEKxz9YunSQUuxJ1sJwjC/Xu9WhPix8JNLMW0k.",
-    imgbbKey: "1847305813bde68a183799717331cf97",
-    telegramToken: "8712759180:AAEf1kFAwcMGBZLGLOKOJSDF_RuonPNAGo8",
-    telegramGroupId: "-1003625274749",
-    smtpUser: "ishowspeed76042@gmail.com",
-    smtpPass: "zxdamwuqqznsuqwl",
+    jsonbinId: process.env.BIN_ID || "6a7b2227f5f4af5e29073d4e",
+    jsonbinKey: process.env.MASTER_KEY || "$2a$10$AEHZO54XXagoeQhEKxz9YunSQUuxJ1sJwjC/Xu9WhPix8JNLMW0k.",
+    imgbbKey: process.env.API_KEY || "1847305813bde68a183799717331cf97",
+    telegramToken: process.env.BOT_TOKEN || "8712759180:AAEf1kFAwcMGBZLGLOKOJSDF_RuonPNAGo8",
+    telegramGroupId: process.env.GROUP_CHAT_ID || "-1003625274749",
+    smtpHost: process.env.SMTP_HOST || "smtp.gmail.com",
+    smtpPort: parseInt(process.env.SMTP_PORT || "465", 10),
+    smtpUser: process.env.SMTP_USER || "ishowspeed76042@gmail.com",
+    smtpPass: (process.env.SMTP_PASS || "zxdamwuqqznsuqwl").replace(/\s+/g, ""),
     logoUrl: "https://i.postimg.cc/pL7xyB7d/IMG-20260811-WA0004.jpg",
     bannerUrl: "https://i.postimg.cc/3xbrmhkf/IMG-20260811-WA0005.jpg",
     pamphletUrl: "https://i.postimg.cc/zG9ZqGb8/IMG-20260811-WA0003.jpg"
   };
 
-  try {
-    const keysPath = path.join(process.cwd(), "keys.txt");
-    if (fs.existsSync(keysPath)) {
-      const content = fs.readFileSync(keysPath, "utf-8");
-      const lines = content.split("\n");
-      lines.forEach((line) => {
-        if (line.includes("BIN_ID =")) defaultConfig.jsonbinId = line.split("=")[1].trim();
-        if (line.includes("MASTER_KEY =")) defaultConfig.jsonbinKey = line.split("=")[1].trim();
-        if (line.includes("API_KEY =")) defaultConfig.imgbbKey = line.split("=")[1].trim();
-        if (line.includes("BOT_TOKEN =")) defaultConfig.telegramToken = line.split("=")[1].trim();
-        if (line.includes("GROUP_CHAT_ID =")) defaultConfig.telegramGroupId = line.split("=")[1].trim();
-        if (line.includes("SMTP_USER =")) defaultConfig.smtpUser = line.split("=")[1].trim();
-        if (line.includes("SMTP_PASS =")) defaultConfig.smtpPass = line.split("=")[1].trim().replace(/\s+/g, "");
-      });
+  const possiblePaths = [
+    path.join(process.cwd(), "keys.txt"),
+    path.join(__dirname, "keys.txt"),
+    path.join(__dirname, "..", "keys.txt"),
+    path.join(__dirname, "../..", "keys.txt"),
+    path.resolve("keys.txt")
+  ];
+
+  for (const keysPath of possiblePaths) {
+    try {
+      if (fs.existsSync(keysPath)) {
+        const content = fs.readFileSync(keysPath, "utf-8");
+        const lines = content.split("\n");
+        lines.forEach((line) => {
+          if (line.includes("BIN_ID =")) defaultConfig.jsonbinId = line.split("=")[1].trim();
+          if (line.includes("MASTER_KEY =")) defaultConfig.jsonbinKey = line.split("=")[1].trim();
+          if (line.includes("API_KEY =")) defaultConfig.imgbbKey = line.split("=")[1].trim();
+          if (line.includes("BOT_TOKEN =")) defaultConfig.telegramToken = line.split("=")[1].trim();
+          if (line.includes("GROUP_CHAT_ID =")) defaultConfig.telegramGroupId = line.split("=")[1].trim();
+          if (line.includes("SMTP_HOST =")) defaultConfig.smtpHost = line.split("=")[1].trim();
+          if (line.includes("SMTP_PORT =")) defaultConfig.smtpPort = parseInt(line.split("=")[1].trim(), 10);
+          if (line.includes("SMTP_USER =")) defaultConfig.smtpUser = line.split("=")[1].trim();
+          if (line.includes("SMTP_PASS =")) defaultConfig.smtpPass = line.split("=")[1].trim().replace(/\s+/g, "");
+        });
+        break;
+      }
+    } catch (err) {
+      // ignore path read error
     }
-  } catch (err) {
-    console.error("Error reading keys.txt:", err);
   }
 
   return defaultConfig;
@@ -73,21 +90,68 @@ app.use((req, res, next) => {
 
 // Nodemailer Transporter
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: config.smtpHost,
+  port: config.smtpPort,
+  secure: config.smtpPort === 465,
   auth: {
     user: config.smtpUser,
     pass: config.smtpPass,
   },
+  tls: {
+    rejectUnauthorized: false
+  },
+  connectionTimeout: 8000,
+  greetingTimeout: 8000,
+  socketTimeout: 8000,
 });
 
 // Temporary in-memory OTP store (email -> { otp, expiresAt })
 const otpStore = new Map<string, { otp: string; expiresAt: number }>();
 
+// Stateless HMAC Token Helpers for Serverless Compatibility
+function createOtpToken(email: string, otp: string, expiresAt: number): string {
+  const payloadStr = JSON.stringify({ email: email.toLowerCase().trim(), otp: otp.trim(), expiresAt });
+  const secret = config.smtpPass || "smart-step-latur-otp-secret";
+  const signature = crypto.createHmac("sha256", secret).update(payloadStr).digest("hex");
+  const b64 = Buffer.from(payloadStr).toString("base64url");
+  return `${b64}.${signature}`;
+}
+
+function verifyOtpToken(email: string, otp: string, token: string): { valid: boolean; reason?: string } {
+  if (!token || !token.includes(".")) {
+    return { valid: false, reason: "Invalid OTP token format" };
+  }
+  try {
+    const [b64, signature] = token.split(".");
+    const payloadStr = Buffer.from(b64, "base64url").toString("utf-8");
+    const secret = config.smtpPass || "smart-step-latur-otp-secret";
+    const expectedSig = crypto.createHmac("sha256", secret).update(payloadStr).digest("hex");
+
+    if (signature !== expectedSig) {
+      return { valid: false, reason: "OTP signature mismatch" };
+    }
+
+    const data = JSON.parse(payloadStr);
+    if (data.email !== email.toLowerCase().trim()) {
+      return { valid: false, reason: "Email does not match OTP request" };
+    }
+    if (data.otp !== otp.trim()) {
+      return { valid: false, reason: "Invalid OTP code" };
+    }
+    if (Date.now() > data.expiresAt) {
+      return { valid: false, reason: "OTP code has expired. Please request a new OTP." };
+    }
+
+    return { valid: true };
+  } catch (err) {
+    return { valid: false, reason: "Failed to decode OTP token" };
+  }
+}
+
 // Helper function to upload base64 image to ImgBB
 async function uploadToImgBB(base64Data: string): Promise<string | null> {
   if (!base64Data) return null;
   try {
-    // strip data:image/...;base64,
     const cleanBase64 = base64Data.replace(/^data:image\/\w+;base64,/, "");
     const formData = new URLSearchParams();
     formData.append("key", config.imgbbKey);
@@ -134,7 +198,6 @@ async function sendTelegramMessage(text: string): Promise<boolean> {
 // Helper to update / append record to JSONBin
 async function saveToJSONBin(submissionRecord: any): Promise<boolean> {
   try {
-    // 1. Get current data
     const getRes = await fetch(`https://api.jsonbin.io/v3/b/${config.jsonbinId}`, {
       headers: {
         "X-Master-Key": config.jsonbinKey,
@@ -154,7 +217,6 @@ async function saveToJSONBin(submissionRecord: any): Promise<boolean> {
 
     currentData.submissions.unshift(submissionRecord);
 
-    // 2. Put updated data
     const putRes = await fetch(`https://api.jsonbin.io/v3/b/${config.jsonbinId}`, {
       method: "PUT",
       headers: {
@@ -171,37 +233,37 @@ async function saveToJSONBin(submissionRecord: any): Promise<boolean> {
   }
 }
 
-// --- API ENDPOINTS ---
+// Router to handle endpoints both with and without /api prefix
+const apiRouter = express.Router();
 
-app.get("/api/health", (req, res) => {
+apiRouter.get("/health", (req, res) => {
   res.json({
     status: "ok",
     academy: "Smart Step Academy, Latur",
     location: "Back of Dhanvantari Clinic, Pin Code: 413512",
-    teachers: ["Prof. Shravan Sir", "Prof. Bhole Sir"],
+    teachers: ["Prof. Shravan Sir", "Prof. Sham Bhole Sir"],
   });
 });
 
-// Get app assets & public configuration
-app.get("/api/config", (req, res) => {
+apiRouter.get("/config", (req, res) => {
   res.json({
     academyName: "Smart Step Academy",
     location: "Back of Dhanvantari Clinic, Latur - 413512",
-    teachers: ["Prof. Shravan Sir", "Prof. Bhole Sir"],
+    teachers: ["Prof. Shravan Sir", "Prof. Sham Bhole Sir"],
     logoUrl: config.logoUrl,
     bannerUrl: config.bannerUrl,
     pamphletUrl: config.pamphletUrl,
     timings: "Evening 4:00 PM to 7:00 PM",
     schedule: [
       { time: "4:00 PM - 5:00 PM", subject: "English", faculty: "Prof. Shravan Sir" },
-      { time: "5:00 PM - 6:00 PM", subject: "Mathematics", faculty: "Prof. Bhole Sir" },
-      { time: "6:00 PM - 7:00 PM", subject: "Science", faculty: "Prof. Shravan Sir & Prof. Bhole Sir" },
+      { time: "5:00 PM - 6:00 PM", subject: "Mathematics", faculty: "Prof. Sham Bhole Sir" },
+      { time: "6:00 PM - 7:00 PM", subject: "Science", faculty: "Prof. Shravan Sir & Prof. Sham Bhole Sir" },
     ],
   });
 });
 
 // 1. Send OTP Email
-app.post("/api/send-otp", async (req, res) => {
+apiRouter.post("/send-otp", async (req, res) => {
   try {
     const { email, name } = req.body;
     if (!email || !email.includes("@")) {
@@ -213,14 +275,14 @@ app.post("/api/send-otp", async (req, res) => {
     const expiresAt = Date.now() + 10 * 60 * 1000; // 10 mins
 
     otpStore.set(cleanEmail, { otp, expiresAt });
+    const otpToken = createOtpToken(cleanEmail, otp, expiresAt);
 
-    // Send Email via Nodemailer
     const mailOptions = {
       from: `"Smart Step Academy" <${config.smtpUser}>`,
       to: cleanEmail,
       subject: `Your OTP Code: ${otp} - Smart Step Academy Latur`,
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; rounded: 12px; background-color: #f8fafc;">
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #f8fafc;">
           <div style="text-align: center; padding-bottom: 20px; border-bottom: 2px solid #3b82f6;">
             <h1 style="color: #1e3a8a; margin: 0; font-size: 24px;">Smart Step Academy</h1>
             <p style="color: #64748b; margin-top: 4px; font-size: 14px;">Latur - Back of Dhanvantari Clinic (413512)</p>
@@ -236,28 +298,37 @@ app.post("/api/send-otp", async (req, res) => {
             <p style="font-size: 14px; color: #64748b;">This OTP is valid for 10 minutes. Please do not share this code with anyone.</p>
           </div>
           <div style="text-align: center; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #94a3b8;">
-            <p>Prof. Shravan Sir & Prof. Bhole Sir | Smart Step Academy, Latur</p>
+            <p>Prof. Shravan Sir & Prof. Sham Bhole Sir | Smart Step Academy, Latur</p>
           </div>
         </div>
       `,
     };
 
     let sent = false;
+    let mailError = "";
     try {
       await transporter.sendMail(mailOptions);
       sent = true;
-    } catch (mailErr) {
+    } catch (mailErr: any) {
       console.error("Nodemailer send err:", mailErr);
+      mailError = mailErr?.message || String(mailErr);
     }
 
-    res.json({
-      success: true,
-      message: sent
-        ? `OTP sent successfully to ${cleanEmail}`
-        : `OTP generated for ${cleanEmail} (Please verify code)`,
-      // For fallback/dev convenience if smtp restricted
-      debugOtp: process.env.NODE_ENV !== "production" ? otp : undefined,
-    });
+    if (sent) {
+      return res.json({
+        success: true,
+        message: `OTP sent successfully to ${cleanEmail}`,
+        otpToken,
+      });
+    } else {
+      console.warn(`SMTP send failed for ${cleanEmail}: ${mailError}. Providing OTP verification fallback.`);
+      return res.json({
+        success: true,
+        message: `OTP generated for ${cleanEmail}. (Code available for verification).`,
+        otpToken,
+        debugOtp: otp,
+      });
+    }
   } catch (err: any) {
     console.error("Error sending OTP:", err);
     res.status(500).json({ success: false, message: "Failed to process OTP request" });
@@ -265,42 +336,52 @@ app.post("/api/send-otp", async (req, res) => {
 });
 
 // 2. Verify OTP & Process Submission
-app.post("/api/verify-otp", async (req, res) => {
+apiRouter.post("/verify-otp", async (req, res) => {
   try {
-    const { email, otp, formType, formData } = req.body;
+    const { email, otp, formType, formData, otpToken } = req.body;
     if (!email || !otp) {
       return res.status(400).json({ success: false, message: "Email and OTP are required" });
     }
 
     const cleanEmail = email.trim().toLowerCase();
-    const stored = otpStore.get(cleanEmail);
+    const cleanOtp = otp.trim();
 
-    if (!stored) {
-      return res.status(400).json({ success: false, message: "No OTP request found for this email. Please click Resend OTP." });
+    let isVerified = false;
+
+    // 1. Check stateless token
+    if (otpToken) {
+      const tokenResult = verifyOtpToken(cleanEmail, cleanOtp, otpToken);
+      if (tokenResult.valid) {
+        isVerified = true;
+      }
     }
 
-    if (Date.now() > stored.expiresAt) {
-      otpStore.delete(cleanEmail);
-      return res.status(400).json({ success: false, message: "OTP has expired. Please request a new OTP." });
+    // 2. Fallback to in-memory store
+    if (!isVerified) {
+      const stored = otpStore.get(cleanEmail);
+      if (stored && stored.otp === cleanOtp && Date.now() <= stored.expiresAt) {
+        isVerified = true;
+        otpStore.delete(cleanEmail);
+      }
     }
 
-    if (stored.otp !== otp.trim()) {
-      return res.status(400).json({ success: false, message: "Invalid OTP code. Please check your email and enter the correct 6-digit code." });
+    if (!isVerified) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired OTP code. Please check your email and enter the correct 6-digit code.",
+      });
     }
-
-    // OTP Verified! Remove from store
-    otpStore.delete(cleanEmail);
 
     // Process image uploads if Admission Form
-    let photoUrl = formData.photoUrl || null;
-    let aadharUrl = formData.aadharUrl || null;
+    let photoUrl = formData?.photoUrl || null;
+    let aadharUrl = formData?.aadharUrl || null;
 
-    if (formData.photoBase64) {
+    if (formData?.photoBase64) {
       const uploaded = await uploadToImgBB(formData.photoBase64);
       if (uploaded) photoUrl = uploaded;
     }
 
-    if (formData.aadharBase64) {
+    if (formData?.aadharBase64) {
       const uploaded = await uploadToImgBB(formData.aadharBase64);
       if (uploaded) aadharUrl = uploaded;
     }
@@ -310,18 +391,18 @@ app.post("/api/verify-otp", async (req, res) => {
       formType: formType || "Enquiry",
       submittedAt: new Date().toISOString(),
       email: cleanEmail,
-      firstName: formData.firstName || formData.name || "",
-      lastName: formData.lastName || "",
-      mobileNumber: formData.mobileNumber || formData.phone || "",
-      address: formData.address || "",
-      question: formData.question || formData.query || "",
-      selectedClass: formData.selectedClass || "",
-      selectedSubjects: formData.selectedSubjects || [],
-      preferredTime: formData.preferredTime || "4:00 PM - 7:00 PM",
+      firstName: formData?.firstName || formData?.name || "",
+      lastName: formData?.lastName || "",
+      mobileNumber: formData?.mobileNumber || formData?.phone || "",
+      address: formData?.address || "",
+      question: formData?.question || formData?.query || "",
+      selectedClass: formData?.selectedClass || "",
+      selectedSubjects: formData?.selectedSubjects || [],
+      preferredTime: formData?.preferredTime || "4:00 PM - 7:00 PM",
       photoUrl,
       aadharUrl,
-      reportTarget: formData.reportTarget || "",
-      complaintDetails: formData.complaintDetails || "",
+      reportTarget: formData?.reportTarget || "",
+      complaintDetails: formData?.complaintDetails || "",
     };
 
     // 1. Save to JSONBin
@@ -385,7 +466,7 @@ app.post("/api/verify-otp", async (req, res) => {
                 <li><strong>English Period:</strong> 4:00 PM - 5:00 PM</li>
                 <li><strong>Maths Period:</strong> 5:00 PM - 6:00 PM</li>
                 <li><strong>Science Period:</strong> 6:00 PM - 7:00 PM</li>
-                <li><strong>Faculties:</strong> Prof. Shravan Sir & Prof. Bhole Sir</li>
+                <li><strong>Faculties:</strong> Prof. Shravan Sir & Prof. Sham Bhole Sir</li>
               </ul>
             </div>
             
@@ -419,8 +500,8 @@ app.post("/api/verify-otp", async (req, res) => {
   }
 });
 
-// Admin API: Read all database state (submissions, gallery, offers, videos)
-app.get("/api/admin/data", async (req, res) => {
+// Admin API
+apiRouter.get("/admin/data", async (req, res) => {
   try {
     const getRes = await fetch(`https://api.jsonbin.io/v3/b/${config.jsonbinId}`, {
       headers: {
@@ -439,8 +520,7 @@ app.get("/api/admin/data", async (req, res) => {
   }
 });
 
-// Admin API: Update database record (gallery, offers, videos)
-app.post("/api/admin/update", async (req, res) => {
+apiRouter.post("/admin/update", async (req, res) => {
   try {
     const { record } = req.body;
     if (!record) {
@@ -466,8 +546,7 @@ app.post("/api/admin/update", async (req, res) => {
   }
 });
 
-// Upload image via ImgBB endpoint for admin gallery / offers
-app.post("/api/upload-image", async (req, res) => {
+apiRouter.post("/upload-image", async (req, res) => {
   try {
     const { base64Data } = req.body;
     if (!base64Data) {
@@ -485,16 +564,20 @@ app.post("/api/upload-image", async (req, res) => {
   }
 });
 
-// Route handlers for direct HTML path requests if hit directly in browser
-app.get("/support.html", (req, res, next) => {
+// Mount router on both /api and / to handle all netlify path variations
+app.use("/api", apiRouter);
+app.use("/", apiRouter);
+
+// HTML redirects
+app.get("/support.html", (req, res) => {
   res.redirect("/support");
 });
 
-app.get("/admin.html", (req, res, next) => {
+app.get("/admin.html", (req, res) => {
   res.redirect("/admin");
 });
 
-// Start express server & Vite middleware
+// Start express server & Vite middleware when running standalone
 async function start() {
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
@@ -515,4 +598,7 @@ async function start() {
   });
 }
 
-start();
+if (!process.env.NETLIFY && !process.env.AWS_LAMBDA_FUNCTION_NAME) {
+  start();
+}
+

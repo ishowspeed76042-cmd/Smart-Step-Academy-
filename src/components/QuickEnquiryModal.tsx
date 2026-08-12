@@ -20,6 +20,8 @@ export const QuickEnquiryModal: React.FC<QuickEnquiryModalProps> = ({ isOpen, on
 
   const [isLoading, setIsLoading] = useState(false);
   const [showOtpModal, setShowOtpModal] = useState(false);
+  const [otpToken, setOtpToken] = useState<string | undefined>(undefined);
+  const [initialDebugOtp, setInitialDebugOtp] = useState<string | undefined>(undefined);
   const [submittedResponse, setSubmittedResponse] = useState<any>(null);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -49,6 +51,8 @@ export const QuickEnquiryModal: React.FC<QuickEnquiryModalProps> = ({ isOpen, on
 
       const data = await res.json();
       if (data.success) {
+        setOtpToken(data.otpToken);
+        setInitialDebugOtp(data.debugOtp);
         setShowOtpModal(true);
       } else {
         setErrorMessage(data.message || "Failed to send verification OTP");
@@ -277,6 +281,8 @@ export const QuickEnquiryModal: React.FC<QuickEnquiryModalProps> = ({ isOpen, on
           email={formData.email}
           formType="Enquiry"
           formData={formData}
+          otpToken={otpToken}
+          initialDebugOtp={initialDebugOtp}
           onClose={() => setShowOtpModal(false)}
           onSuccess={handleOtpSuccess}
         />

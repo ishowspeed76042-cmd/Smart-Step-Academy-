@@ -25,7 +25,7 @@ export const FACULTIES: Faculty[] = [
   },
   {
     id: "f2",
-    name: "Prof. Bhole Sir",
+    name: "Prof. Sham Bhole Sir",
     title: "Senior Mathematics & Science Specialist",
     subjects: ["Mathematics", "Physics & Chemistry"],
     experience: "10+ Years Teaching Experience",
@@ -87,7 +87,7 @@ export const INITIAL_GALLERY: GalleryItem[] = [
   },
   {
     id: "g2",
-    title: "Prof. Bhole Sir - Mathematics & Science Faculty",
+    title: "Prof. Sham Bhole Sir - Mathematics & Science Faculty",
     category: "Success Story",
     imageUrl: "https://i.ibb.co/rKLf0VHd/IMG-20260811-WA0009.jpg",
     uploadedAt: new Date().toISOString(),

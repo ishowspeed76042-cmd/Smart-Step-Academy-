@@ -43,6 +43,8 @@ export const AdmissionModal: React.FC<AdmissionModalProps> = ({ isOpen, onClose 
   const [aadharPreview, setAadharPreview] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showOtpModal, setShowOtpModal] = useState(false);
+  const [otpToken, setOtpToken] = useState<string | undefined>(undefined);
+  const [initialDebugOtp, setInitialDebugOtp] = useState<string | undefined>(undefined);
   const [submittedResponse, setSubmittedResponse] = useState<any>(null);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -110,6 +112,8 @@ export const AdmissionModal: React.FC<AdmissionModalProps> = ({ isOpen, onClose 
 
       const data = await res.json();
       if (data.success) {
+        setOtpToken(data.otpToken);
+        setInitialDebugOtp(data.debugOtp);
         setShowOtpModal(true);
       } else {
         setErrorMessage(data.message || "Failed to send verification OTP");
@@ -186,8 +190,8 @@ export const AdmissionModal: React.FC<AdmissionModalProps> = ({ isOpen, onClose 
                 </div>
                 <div className="text-xs text-slate-300 space-y-1">
                   <div>• <strong>4:00 PM - 5:00 PM:</strong> English (Prof. Shravan Sir)</div>
-                  <div>• <strong>5:00 PM - 6:00 PM:</strong> Mathematics (Prof. Lakhsham Bhole Sir)</div>
-                  <div>• <strong>6:00 PM - 7:00 PM:</strong> Science (Prof. Shravan Sir & Prof. Lakhsham Bhole Sir)</div>
+                  <div>• <strong>5:00 PM - 6:00 PM:</strong> Mathematics (Prof. Sham Bhole Sir)</div>
+                  <div>• <strong>6:00 PM - 7:00 PM:</strong> Science (Prof. Shravan Sir & Prof. Sham Bhole Sir)</div>
                 </div>
               </div>
 
@@ -366,7 +370,7 @@ export const AdmissionModal: React.FC<AdmissionModalProps> = ({ isOpen, onClose 
                 <div className="grid grid-cols-3 gap-2">
                   {[
                     { id: "English", label: "English", time: "4:00 - 5:00 PM", faculty: "Prof. Shravan Sir" },
-                    { id: "Mathematics", label: "Mathematics", time: "5:00 - 6:00 PM", faculty: "Prof. Lakhsham Bhole Sir" },
+                    { id: "Mathematics", label: "Mathematics", time: "5:00 - 6:00 PM", faculty: "Prof. Sham Bhole Sir" },
                     { id: "Science", label: "Science", time: "6:00 - 7:00 PM", faculty: "Both Faculties" },
                   ].map((sub) => {
                     const isSelected = formData.selectedSubjects.includes(sub.id);
@@ -490,6 +494,8 @@ export const AdmissionModal: React.FC<AdmissionModalProps> = ({ isOpen, onClose 
           email={formData.email}
           formType="Admission"
           formData={formData}
+          otpToken={otpToken}
+          initialDebugOtp={initialDebugOtp}
           onClose={() => setShowOtpModal(false)}
           onSuccess={handleOtpSuccess}
         />

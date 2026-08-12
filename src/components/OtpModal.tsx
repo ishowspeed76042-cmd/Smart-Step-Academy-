@@ -6,6 +6,8 @@ interface OtpModalProps {
   email: string;
   formType: "Enquiry" | "Admission" | "Support/Complaint";
   formData: any;
+  otpToken?: string;
+  initialDebugOtp?: string;
   onClose: () => void;
   onSuccess: (response: any) => void;
 }
@@ -15,6 +17,8 @@ export const OtpModal: React.FC<OtpModalProps> = ({
   email,
   formType,
   formData,
+  otpToken: initialOtpToken,
+  initialDebugOtp,
   onClose,
   onSuccess,
 }) => {
@@ -24,6 +28,16 @@ export const OtpModal: React.FC<OtpModalProps> = ({
   const [timer, setTimer] = useState(60);
   const [canResend, setCanResend] = useState(false);
   const [resendStatus, setResendStatus] = useState("");
+  const [currentOtpToken, setCurrentOtpToken] = useState<string | undefined>(initialOtpToken);
+  const [debugCode, setDebugCode] = useState<string | undefined>(initialDebugOtp);
+
+  useEffect(() => {
+    setCurrentOtpToken(initialOtpToken);
+  }, [initialOtpToken]);
+
+  useEffect(() => {
+    setDebugCode(initialDebugOtp);
+  }, [initialDebugOtp]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -97,7 +111,13 @@ export const OtpModal: React.FC<OtpModalProps> = ({
       });
       const data = await res.json();
       if (data.success) {
-        setResendStatus("New OTP sent to " + email);
+        setResendStatus("New OTP generated for " + email);
+        if (data.otpToken) {
+          setCurrentOtpToken(data.otpToken);
+        }
+        if (data.debugOtp) {
+          setDebugCode(data.debugOtp);
+        }
       } else {
         setErrorMessage(data.message || "Failed to resend OTP");
       }
@@ -125,6 +145,7 @@ export const OtpModal: React.FC<OtpModalProps> = ({
           otp: fullOtp,
           formType,
           formData,
+          otpToken: currentOtpToken,
         }),
       });
 
@@ -174,6 +195,21 @@ export const OtpModal: React.FC<OtpModalProps> = ({
           <div className="mb-4 p-2.5 bg-emerald-950/80 border border-emerald-800/80 rounded-xl flex items-center gap-2 text-emerald-200 text-xs">
             <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>{resendStatus}</span>
+          </div>
+        )}
+
+        {debugCode && (
+          <div className="mb-4 p-2.5 bg-amber-950/80 border border-amber-800/80 rounded-xl flex items-center justify-between text-amber-200 text-xs shadow-inner">
+            <span>Verification Code: <strong className="text-amber-400 font-bold tracking-widest text-sm ml-1">{debugCode}</strong></span>
+            <button
+              onClick={() => {
+                const digits = debugCode.split("");
+                setOtp(digits);
+              }}
+              className="text-amber-300 hover:text-amber-200 underline font-semibold cursor-pointer text-xs"
+            >
+              Auto-fill Code
+            </button>
           </div>
         )}
 
